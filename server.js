@@ -2,6 +2,7 @@ const http = require('http');
 const port = 3000;
 const url =require('url')
 const dhanu = require('fs')
+const querystring=require('querystring')
 const server = http.createServer((req,res)=>{
     const req_url = req.url;
     console.log('req-url :',req_url)
@@ -19,8 +20,20 @@ const server = http.createServer((req,res)=>{
     }
     
     else if(parsed_url.pathname === '/style.css'){
-        res.writeHead(200,{'Content-type': 'text/css'})
+        res.writeHead(200,{'content-type': 'text/css'})
         res.end(dhanu.readFileSync('./style.css'))
+    }else if(parsed_url.pathname === '/submit' && req.method === 'POST'){
+        console.log("reached......")
+
+        let body='';
+        
+        req.on('data',(chunks)=> {
+            console.log("chunks",chunks);
+
+            body = body + chunks.toString();
+            console.log(body)
+        });
+
     }
 })
 server.listen(port,()=>{
